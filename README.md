@@ -1,5 +1,9 @@
 # claude-approver
 
+```bash
+brew tap g4lb/tap && brew install claude-approver
+```
+
 Two tiny macOS scripts that save you from clicking "yes" on every [Claude Code](https://claude.com/claude-code) prompt when you have multiple sessions open.
 
 Works with **iTerm2** and **Terminal.app**.
