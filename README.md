@@ -1,59 +1,68 @@
 # claude-approver
 
-Two macOS helper scripts for flipping multiple open [Claude Code](https://claude.com/claude-code) sessions into a "don't ask me" mode at once — without focusing each terminal tab manually.
+Two tiny macOS scripts that save you from clicking "yes" on every [Claude Code](https://claude.com/claude-code) prompt when you have multiple sessions open.
 
-Supports **iTerm2** and **Terminal.app**.
+Works with **iTerm2** and **Terminal.app**.
 
-## The scripts
+## What they do
 
-### `claude-accept-all.sh`
-Sends `Shift+Tab` to every terminal session whose title or running process matches a pattern (default: `claude`). This flips Claude Code into **auto-accept-edits** mode.
-
-```bash
-./claude-accept-all.sh            # matches "claude"
-./claude-accept-all.sh myproj     # custom pattern
-```
-
-- iTerm2 sessions receive the escape sequence directly (no focus stealing).
-- Terminal.app sessions are briefly focused to send the keystroke.
-
-### `claude-relaunch-bypass.sh`
-Kills each running Claude Code CLI process and relaunches it in the same terminal with `--dangerously-skip-permissions` (and `--continue` by default), suppressing all permission prompts.
-
-```bash
-./claude-relaunch-bypass.sh              # interactive; relaunches with --continue
-./claude-relaunch-bypass.sh --dry-run    # list what would be relaunched
-./claude-relaunch-bypass.sh --no-continue  # start fresh sessions instead
-```
-
-Env:
-- `CLAUDE_CMD_PATTERN` — regex passed to `grep -E` when matching process command lines (default: `claude`).
+| Script | What it does |
+|---|---|
+| `claude-accept-all.sh` | Flips every open Claude session into **auto-accept-edits** mode (sends `Shift+Tab` to all of them at once). |
+| `claude-relaunch-bypass.sh` | Restarts every open Claude session with `--dangerously-skip-permissions`, so nothing prompts at all. |
 
 ## Install
 
 ```bash
 git clone https://github.com/g4lb/claude-approver.git
 cd claude-approver
-chmod +x claude-accept-all.sh claude-relaunch-bypass.sh
+chmod +x *.sh
 ```
 
-Optionally put them on your `PATH`:
+## Use
 
 ```bash
-ln -s "$PWD/claude-accept-all.sh" /usr/local/bin/claude-accept-all
-ln -s "$PWD/claude-relaunch-bypass.sh" /usr/local/bin/claude-relaunch-bypass
+# flip everything to auto-accept
+./claude-accept-all.sh
+
+# or: fully bypass permissions (asks once before relaunching)
+./claude-relaunch-bypass.sh
+
+# see what would happen first
+./claude-relaunch-bypass.sh --dry-run
 ```
 
-## Permissions
+## Grant macOS permissions (one-time setup)
 
-macOS will ask for **Accessibility** and/or **Automation** permission the first time you run these (System Settings → Privacy & Security). Grant it to whichever app invokes the script — Terminal, iTerm2, or `osascript`.
+The scripts use AppleScript to talk to your terminal. macOS will block them until you enable two things. Do this **once**:
 
-## Caveats
+### 1. Accessibility
 
-- `--dangerously-skip-permissions` means Claude Code runs tools without asking. Destructive actions won't be gated. Use with intent.
-- `claude-relaunch-bypass.sh` kills in-flight tool calls — side effects are **not** rolled back.
-- `--continue` resumes the most-recent session in a cwd. If you had two Claude sessions in the same directory, both relaunches race for the same history; one wins. Use `--no-continue` in that case.
-- Only tested on macOS with iTerm2 and Terminal.app.
+Needed so the script can press keys in your terminal.
+
+1. Open **System Settings → Privacy & Security → Accessibility**
+2. Toggle **ON** whichever app you run the script from:
+   - Terminal
+   - iTerm2
+   - (and/or `osascript`, if it appears)
+
+### 2. Automation
+
+Needed so your terminal can control other apps.
+
+1. Open **System Settings → Privacy & Security → Automation**
+2. Find **Terminal** and/or **iTerm**, expand it, and toggle **ON**:
+   - `System Events`
+   - `Terminal` (if you use Terminal.app)
+   - `iTerm` (if you use iTerm2)
+
+> First run tip: just run `./claude-accept-all.sh`. macOS will pop up the permission prompts automatically — click **OK** on each. If you click Deny by accident, add it manually using the steps above.
+
+## Heads-up
+
+- `--dangerously-skip-permissions` means Claude runs **every** tool without asking — including destructive ones. Use with intent.
+- Relaunching kills in-flight tool calls. Side effects already applied are **not** rolled back.
+- macOS only. Tested with iTerm2 and Terminal.app.
 
 ## License
 
