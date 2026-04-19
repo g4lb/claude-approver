@@ -41,10 +41,17 @@ The scripts use AppleScript to talk to your terminal. macOS will block them unti
 Needed so the script can press keys in your terminal.
 
 1. Open **System Settings → Privacy & Security → Accessibility**
-2. Toggle **ON** whichever app you run the script from:
-   - Terminal
-   - iTerm2
-   - (and/or `osascript`, if it appears)
+2. Toggle **ON** whichever app you run the script from (Terminal, iTerm2, and/or `osascript`).
+
+**Don't see Terminal in the list?** Add it manually:
+
+1. Click the **`+`** button at the bottom of the list.
+2. Press **`⌘ + Shift + G`** to open "Go to Folder".
+3. Paste `/System/Applications/Utilities/` and hit Enter.
+4. Select **Terminal.app** → click **Open**.
+5. Make sure the toggle next to Terminal is **ON**.
+
+> iTerm2 lives in `/Applications/iTerm.app` — same steps, just point to that folder.
 
 ### 2. Automation
 
