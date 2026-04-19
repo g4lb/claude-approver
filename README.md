@@ -13,6 +13,17 @@ Works with **iTerm2** and **Terminal.app**.
 
 ## Install
 
+### Homebrew (easiest)
+
+```bash
+brew tap g4lb/tap
+brew install claude-approver
+```
+
+You'll get `claude-accept-all` and `claude-relaunch-bypass` on your `$PATH`.
+
+### Or clone directly
+
 ```bash
 git clone https://github.com/g4lb/claude-approver.git
 cd claude-approver
@@ -23,14 +34,16 @@ chmod +x *.sh
 
 ```bash
 # flip everything to auto-accept
-./claude-accept-all.sh
+claude-accept-all
 
 # or: fully bypass permissions (asks once before relaunching)
-./claude-relaunch-bypass.sh
+claude-relaunch-bypass
 
 # see what would happen first
-./claude-relaunch-bypass.sh --dry-run
+claude-relaunch-bypass --dry-run
 ```
+
+> If you cloned the repo instead of installing via brew, run `./claude-accept-all.sh` and `./claude-relaunch-bypass.sh`.
 
 ## Grant macOS permissions (one-time setup)
 
